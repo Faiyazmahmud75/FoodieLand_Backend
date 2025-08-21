@@ -1,74 +1,45 @@
-# FoodieLand Backend
+# FoodieLand API (Django + DRF)
 
-This is the **backend** for the FoodieLand platform — a community-driven site where users can share and explore recipes, write blogs, and connect with cooking enthusiasts.  
-Built with **Django REST Framework** and **SQLite** for development.
+Community-driven recipes and blogs platform API.
 
----
-
-## 🚀 Features
-- **User Authentication** (JWT-based)
-- **Recipes Management** (CRUD)
-- **Blog Management** (CRUD)
-- **Contact Form API**
-- **User Profile Management**
-- **Media & Static File Handling**
-- **CORS Enabled** for React frontend
-- **SQLite** for easy local development
-
----
-
-## 🛠️ Technology Stack
-- **Backend**: Django 4.x, Django REST Framework
-- **Auth**: JWT (djangorestframework-simplejwt)
-- **Database**: SQLite (development) — can be switched to PostgreSQL for production
-- **API Docs**: Swagger (drf-yasg)
-
----
-
-## 📦 Installation & Setup
-
-1. **Clone Repository**
-```bash
-git clone https://github.com/AKJilani/Foodieland_Backend.git
-cd foodieland_backend
-
-Create Virtual Environment
-===========================
-bash
-Copy
-Edit
+## Quick start (local)
+- Create virtualenv and install deps
+```
 python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-
-Install Dependencies
-========================
+./venv/Scripts/activate  # PowerShell
 pip install -r requirements.txt
-
-
-Run Migrations
-===========================
+```
+- Configure env
+```
+copy .env.example .env  # set SMTP later for real emails
+```
+- Run
+```
 python manage.py migrate
-
-
-Run Development Server
-=====================
+python manage.py createsuperuser
 python manage.py runserver
+```
 
+## OpenAPI docs
+- `GET /api/docs/`
 
-foodieland_backend/
-│── foodieland_backend/   # Project settings
-│── users/                # User authentication & profile
-│── recipes/              # Recipe API
-│── blogs/                # Blog API
-│── contact/              # Contact API
-│── media/                # Uploaded files
-│── db.sqlite3            # SQLite database
-│── manage.py
-│── requirements.txt
-│── README.md
+## Auth
+- POST `/api/auth/register/`
+- POST `/api/auth/token/` (JWT login)
+- POST `/api/auth/token/refresh/`
+- GET/PATCH `/api/auth/me/`
+- POST `/api/auth/verify-email/`
+- POST `/api/auth/request-password-reset/`
+- POST `/api/auth/reset-password/`
 
+## Recipes
+- `/api/recipes/`
+- `/api/recipes/categories/`
+- `/api/recipes/my/ratings/`
+- `/api/recipes/my/favorites/`
 
+## Blogs
+- `/api/blogs/`
+- `/api/blogs/categories/`
+- `/api/blogs/comments/?blog=<id>`
+- POST `/api/blogs/{id}/increment_view/` 
