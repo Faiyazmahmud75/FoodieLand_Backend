@@ -65,3 +65,6 @@ class ResetPasswordSerializer(serializers.Serializer):
 		user.password_reset_expires = None
 		user.save()
 		return attrs 
+
+class VerifyEmailSerializer(serializers.Serializer):
+    token = serializers.CharField()
