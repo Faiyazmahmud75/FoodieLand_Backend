@@ -3,7 +3,6 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import User
 import secrets
-from core.utils import send_email
 from django.conf import settings
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,15 +19,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 	def create(self, validated_data):
 		user = User.objects.create_user(**validated_data)
-		token = secrets.token_urlsafe(32)
-		user.email_verification_token = token
-		user.save(update_fields=["email_verification_token"])
-		verify_link = f"{settings.FRONTEND_URL}/verify-email?token={token}"
-		send_email(
-			"Verify your FoodieLand account",
-			f"Click to verify: {verify_link}",
-			[user.email]
-		)
 		return user
 
 class RequestPasswordResetSerializer(serializers.Serializer):
@@ -39,12 +29,6 @@ class RequestPasswordResetSerializer(serializers.Serializer):
 			user = User.objects.get(email=email)
 		except User.DoesNotExist:
 			raise serializers.ValidationError("User not found")
-		token = secrets.token_urlsafe(32)
-		user.password_reset_token = token
-		user.password_reset_expires = timezone.now() + timedelta(hours=1)
-		user.save(update_fields=["password_reset_token", "password_reset_expires"])
-		reset_link = f"{settings.FRONTEND_URL}/reset-password?token={token}"
-		send_email("Reset your FoodieLand password", f"Reset link: {reset_link}", [user.email])
 		return attrs
 
 class ResetPasswordSerializer(serializers.Serializer):
@@ -65,3 +49,6 @@ class ResetPasswordSerializer(serializers.Serializer):
 		user.password_reset_expires = None
 		user.save()
 		return attrs 
+
+class VerifyEmailSerializer(serializers.Serializer):
+    token = serializers.CharField()

@@ -20,3 +20,23 @@ media/
 # System
 .DS_Store
 Thumbs.db
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite
+db.sqlite3
+
+# Environment
+.env
+venv/
+
+# Django
+staticfiles/
+media/
+
+# System
+.DS_Store
+Thumbs.db

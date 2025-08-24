@@ -16,14 +16,18 @@ class ContactMessageViewSet(viewsets.ModelViewSet):
 		return super().create(request, *args, **kwargs)
 
 class UserFollowViewSet(viewsets.ModelViewSet):
-	serializer_class = UserFollowSerializer
-	permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserFollowSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-	def get_queryset(self):
-		return UserFollow.objects.filter(follower=self.request.user)
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return UserFollow.objects.none()
+        if not self.request.user.is_authenticated:
+            return UserFollow.objects.none()
+        return UserFollow.objects.filter(follower=self.request.user)
 
-	@decorators.action(detail=False, methods=["post"], url_path="unfollow")
-	def unfollow(self, request):
-		following_id = request.data.get("following")
-		UserFollow.objects.filter(follower=request.user, following_id=following_id).delete()
-		return response.Response({"detail": "unfollowed"}, status=status.HTTP_200_OK) 
+    @decorators.action(detail=False, methods=["post"], url_path="unfollow")
+    def unfollow(self, request):
+        following_id = request.data.get("following")
+        UserFollow.objects.filter(follower=request.user, following_id=following_id).delete()
+        return response.Response({"detail": "unfollowed"}, status=status.HTTP_200_OK)

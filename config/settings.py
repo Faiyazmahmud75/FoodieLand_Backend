@@ -4,15 +4,10 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from dotenv import load_dotenv
-env_file = BASE_DIR / ".env"
-if env_file.exists():
-	load_dotenv(env_file)
+SECRET_KEY = "dev-secret-key"
+DEBUG = True
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
-
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
 	"django.contrib.admin",
@@ -111,13 +106,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Email
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "akjilani.testapplication@gmail.com"
-EMAIL_HOST_PASSWORD = "nbhh qqsr omub tglx"
+
 
 # JWT
 SIMPLE_JWT = {
@@ -130,5 +119,14 @@ SIMPLE_JWT = {
 # CORS (simple manual allowlist)
 CORS_ALLOW_ALL_ORIGINS = True
 
-SITE_URL = os.getenv("SITE_URL", "http://localhost")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+SITE_URL = "http://localhost"
+FRONTEND_URL = "http://localhost:5173"
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'akjilani.testapplication@gmail.com'
+EMAIL_HOST_PASSWORD = 'rkof ouop ulqc senu'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
