@@ -32,23 +32,9 @@ class RequestPasswordResetSerializer(serializers.Serializer):
 		return attrs
 
 class ResetPasswordSerializer(serializers.Serializer):
-	token = serializers.CharField()
-	new_password = serializers.CharField(min_length=8)
-
-	def validate(self, attrs):
-		token = attrs["token"]
-		new_password = attrs["new_password"]
-		try:
-			user = User.objects.get(password_reset_token=token)
-		except User.DoesNotExist:
-			raise serializers.ValidationError("Invalid token")
-		if not user.password_reset_expires or user.password_reset_expires < timezone.now():
-			raise serializers.ValidationError("Token expired")
-		user.set_password(new_password)
-		user.password_reset_token = None
-		user.password_reset_expires = None
-		user.save()
-		return attrs 
+    uidb64 = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(min_length=8)
 
 class VerifyEmailSerializer(serializers.Serializer):
     token = serializers.CharField()

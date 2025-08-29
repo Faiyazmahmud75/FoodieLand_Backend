@@ -11,9 +11,13 @@ class ContactMessage(models.Model):
 	is_read = models.BooleanField(default=False)
 	message_type = models.CharField(max_length=64, default="general")
 	created_at = models.DateTimeField(auto_now_add=True)
+	parent_message = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
 
 	def __str__(self):
 		return f"Message to {self.recipient.email} from {self.sender_email}"
+	
+	def is_reply(self):
+    		return self.parent_message is not None
 
 class UserFollow(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

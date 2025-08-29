@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, filters, decorators, response,
 from .models import RecipeCategory, Recipe, RecipeRating, UserFavoriteRecipe
 from .serializers import RecipeCategorySerializer, RecipeSerializer, RecipeRatingSerializer, UserFavoriteRecipeSerializer
 from drf_spectacular.utils import extend_schema
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -21,6 +22,7 @@ class RecipeCategoryViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.select_related("author","category").all().order_by("-created_at")
     serializer_class = RecipeSerializer
+    parser_classes = [MultiPartParser, FormParser]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title","description","ingredients"]

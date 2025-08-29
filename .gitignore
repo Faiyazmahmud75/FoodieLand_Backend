@@ -4,9 +4,6 @@ __pycache__/
 *.pyo
 *.pyd
 
-# SQLite
-db.sqlite3
-
 # Environment
 .env
 .venv
@@ -25,9 +22,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# SQLite
-db.sqlite3
 
 # Environment
 .env
