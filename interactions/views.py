@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, response, decorators, status
-from .models import ContactMessage, UserFollow
-from .serializers import ContactMessageSerializer, UserFollowSerializer
+from .models import ContactMessage, UserFollow, Newsletter, ContactUsMessage
+from .serializers import ContactMessageSerializer, UserFollowSerializer, NewsletterSerializer, ContactUsMessageSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import action
 
@@ -61,3 +61,20 @@ class UserListViewSet(viewsets.ReadOnlyModelViewSet):
         users = self.get_queryset()
         data = [{"id": user.id, "name": user.name or user.email, "email": user.email} for user in users]
         return response.Response(data)
+
+class NewsletterViewSet(viewsets.ModelViewSet):
+    serializer_class = NewsletterSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = Newsletter.objects.all()
+
+    def get_queryset(self):
+        return Newsletter.objects.all().order_by("-created_at")
+
+
+class ContactUsMessageViewSet(viewsets.ModelViewSet):
+    serializer_class = ContactUsMessageSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = ContactUsMessage.objects.all()
+
+    def get_queryset(self):
+        return ContactUsMessage.objects.all().order_by("-created_at")

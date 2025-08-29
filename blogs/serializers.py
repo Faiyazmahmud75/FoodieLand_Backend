@@ -19,6 +19,7 @@ class BlogSerializer(serializers.ModelSerializer):
 		return super().create(validated_data)
 
 class BlogCommentSerializer(serializers.ModelSerializer):
+	user = serializers.CharField(source="user.name", read_only=True)
 	class Meta:
 		model = BlogComment
 		fields = "__all__"

@@ -1,0 +1,152 @@
+erDiagram
+
+%% ===================== USER =====================
+User {
+    UUID id PK
+    string name
+    string email "UNIQUE, NOT NULL"
+    string password "hashed"
+    string profile_picture "URL"
+    text bio
+    boolean is_email_verified "DEFAULT false"
+    string email_verification_token "UNIQUE, nullable"
+    string password_reset_token "nullable"
+    datetime password_reset_expires "nullable"
+    boolean is_active "DEFAULT true"
+    boolean is_staff "DEFAULT false"
+    datetime created_at "DEFAULT now()"
+    datetime updated_at "DEFAULT now()"
+}
+
+%% ===================== RECIPE =====================
+RecipeCategory {
+    UUID id PK
+    string name "UNIQUE, NOT NULL"
+    text description
+    string icon
+    string color
+    integer recipe_count "cached"
+    datetime created_at "DEFAULT now()"
+}
+
+Recipe {
+    UUID id PK
+    string title "NOT NULL"
+    text description
+    json nutrition_info
+    image image
+    json ingredients
+    json preparation_steps
+    UUID category_id FK
+    UUID author_id FK
+    decimal average_rating "DEFAULT 0"
+    integer total_ratings "DEFAULT 0"
+    boolean is_featured "DEFAULT false"
+    datetime created_at "DEFAULT now()"
+    datetime updated_at "DEFAULT now()"
+}
+
+RecipeRating {
+    UUID id PK
+    UUID recipe_id FK
+    UUID user_id FK
+    integer rating "1-5"
+    text review
+    datetime created_at "DEFAULT now()"
+    datetime updated_at "DEFAULT now()"
+}
+
+UserFavoriteRecipe {
+    UUID id PK
+    UUID user_id FK
+    UUID recipe_id FK
+    datetime created_at "DEFAULT now()"
+}
+
+%% ===================== BLOG =====================
+BlogCategory {
+    UUID id PK
+    string name "UNIQUE, NOT NULL"
+    text description
+    string color
+    integer blog_count "cached"
+    datetime created_at "DEFAULT now()"
+}
+
+Blog {
+    UUID id PK
+    string title "NOT NULL"
+    text description
+    text content
+    string featured_image "URL"
+    UUID author_id FK
+    UUID category_id FK
+    integer view_count "DEFAULT 0"
+    boolean is_published "DEFAULT false"
+    datetime created_at "DEFAULT now()"
+    datetime updated_at "DEFAULT now()"
+}
+
+BlogComment {
+    UUID id PK
+    UUID blog_id FK
+    UUID user_id FK
+    text content
+    UUID parent_comment_id FK
+    boolean is_approved "DEFAULT true"
+    datetime created_at "DEFAULT now()"
+    datetime updated_at "DEFAULT now()"
+}
+
+%% ===================== INTERACTIONS =====================
+ContactMessage {
+    UUID id PK
+    string sender_name "NOT NULL"
+    string sender_email "NOT NULL"
+    text message "NOT NULL"
+    UUID recipient_id FK
+    boolean is_read "DEFAULT false"
+    string message_type "DEFAULT 'general'"
+    datetime created_at "DEFAULT now()"
+    UUID parent_message_id FK
+}
+
+UserFollow {
+    UUID id PK
+    UUID follower_id FK
+    UUID following_id FK
+    datetime created_at "DEFAULT now()"
+}
+
+Newsletter {
+    UUID id PK
+    string email "UNIQUE, NOT NULL"
+    datetime created_at "DEFAULT now()"
+}
+
+ContactUsMessage {
+    UUID id PK
+    string name "NOT NULL"
+    string email "NOT NULL"
+    string subject "NOT NULL"
+    string enquiry_type "NOT NULL"
+    text message "NOT NULL"
+    datetime created_at "DEFAULT now()"
+}
+
+%% ===================== RELATIONSHIPS =====================
+User ||--o{ Recipe : "creates"
+RecipeCategory ||--o{ Recipe : "categorizes"
+User ||--o{ RecipeRating : "rates"
+Recipe ||--o{ RecipeRating : "rated_by"
+User ||--o{ UserFavoriteRecipe : "favorites"
+Recipe ||--o{ UserFavoriteRecipe : "favorited_by"
+User ||--o{ Blog : "writes"
+BlogCategory ||--o{ Blog : "categorizes"
+Blog ||--o{ BlogComment : "has_comments"
+User ||--o{ BlogComment : "comments"
+BlogComment ||--o{ BlogComment : "replies_to"
+User ||--o{ ContactMessage : "receives"
+ContactMessage ||--o{ ContactMessage : "replies"
+User ||--o{ UserFollow : "follows"
+User ||--o{ UserFollow : "followed_by"
