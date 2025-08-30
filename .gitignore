@@ -36,16 +36,3 @@ media/
 # System
 .DS_Store
 Thumbs.db
-
-# Python
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.env
-*.env
-venv/
-.venv/
-
-# Firebase secret
-firebase_service_account.json
