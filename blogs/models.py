@@ -18,7 +18,7 @@ class Blog(models.Model):
 	title = models.CharField(max_length=255)
 	description = models.TextField(blank=True, null=True)
 	content = models.TextField()
-	featured_image = models.URLField(blank=True, null=True)
+	featured_image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
 	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blogs")
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True, related_name="blogs")
 	view_count = models.PositiveIntegerField(default=0)

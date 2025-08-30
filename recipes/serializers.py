@@ -8,15 +8,23 @@ class RecipeCategorySerializer(serializers.ModelSerializer):
 		read_only_fields = ["id", "recipe_count", "created_at"]
 
 class RecipeSerializer(serializers.ModelSerializer):
-	author_name = serializers.CharField(source="author.name", read_only=True)
-	class Meta:
-		model = Recipe
-		fields = ["id","title","description","image","ingredients","preparation_steps","category","author","author_name","average_rating","total_ratings","is_featured","created_at","updated_at"]
-		read_only_fields = ["id","author","average_rating","total_ratings","created_at","updated_at"]
+    author_name = serializers.CharField(source="author.name", read_only=True)
 
-	def create(self, validated_data):
-		validated_data["author"] = self.context["request"].user
-		return super().create(validated_data)
+    class Meta:
+        model = Recipe
+        fields = [
+            "id","title","description","prepTime","nutrition_info","image",
+            "ingredients","preparation_steps","category",
+            "author","author_name",
+            "average_rating","total_ratings","is_featured",
+            "created_at","updated_at"
+        ]
+        read_only_fields = ["id","author","average_rating","total_ratings","created_at","updated_at"]
+
+    def create(self, validated_data):
+        validated_data["author"] = self.context["request"].user
+        return super().create(validated_data)
+
 
 class RecipeRatingSerializer(serializers.ModelSerializer):
 	class Meta:

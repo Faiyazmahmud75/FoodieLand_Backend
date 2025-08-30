@@ -3,6 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import BlogCategory, Blog, BlogComment
 from .serializers import BlogCategorySerializer, BlogSerializer, BlogCommentSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from django_filters.rest_framework import DjangoFilterBackend
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
 	def has_object_permission(self, request, view, obj):
@@ -20,19 +22,21 @@ class BlogCategoryViewSet(viewsets.ModelViewSet):
 	ordering_fields = ["name","created_at"]
 
 class BlogViewSet(viewsets.ModelViewSet):
-	queryset = Blog.objects.select_related("author","category").all().order_by("-created_at")
-	serializer_class = BlogSerializer
-	permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-	filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-	search_fields = ["title","description","content"]
-	ordering_fields = ["created_at"]
+    queryset = Blog.objects.select_related("author","category").all().order_by("-created_at")
+    serializer_class = BlogSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]  # Add DjangoFilterBackend
+    search_fields = ["title","description","content"]
+    ordering_fields = ["created_at"]
+    filterset_fields = ['category']  # Add this line
+    parser_classes = [MultiPartParser, FormParser]
 
-	@action(detail=True, methods=["post"], permission_classes=[permissions.AllowAny])
-	def increment_view(self, request, pk=None):
-		blog = self.get_object()
-		blog.view_count += 1
-		blog.save(update_fields=["view_count"])
-		return Response({"view_count": blog.view_count})
+    @action(detail=True, methods=["post"], permission_classes=[permissions.AllowAny])
+    def increment_view(self, request, pk=None):
+        blog = self.get_object()
+        blog.view_count += 1
+        blog.save(update_fields=["view_count"])
+        return Response({"view_count": blog.view_count})
 
 class BlogCommentViewSet(viewsets.ModelViewSet):
 	serializer_class = BlogCommentSerializer

@@ -15,22 +15,24 @@ class RecipeCategory(models.Model):
 		return self.name
 
 class Recipe(models.Model):
-	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-	title = models.CharField(max_length=255)
-	description = models.TextField(blank=True, null=True)
-	image = models.URLField(blank=True, null=True)
-	ingredients = models.JSONField(default=list, blank=True)
-	preparation_steps = models.JSONField(default=list, blank=True)
-	category = models.ForeignKey(RecipeCategory, on_delete=models.SET_NULL, null=True, related_name="recipes")
-	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="recipes")
-	average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-	total_ratings = models.PositiveIntegerField(default=0)
-	is_featured = models.BooleanField(default=False)
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    prepTime = models.TextField(blank=True, null=True)
+    nutrition_info = models.JSONField(default=dict, blank=True)
+    image = models.ImageField(upload_to="recipes/", blank=True, null=True)
+    ingredients = models.JSONField(default=list, blank=True)
+    preparation_steps = models.JSONField(default=list, blank=True)
+    category = models.ForeignKey(RecipeCategory, on_delete=models.SET_NULL, null=True, related_name="recipes")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="recipes")
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    total_ratings = models.PositiveIntegerField(default=0)
+    is_featured = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-	def __str__(self):
-		return self.title
+    def __str__(self):
+        return self.title
 
 class RecipeRating(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

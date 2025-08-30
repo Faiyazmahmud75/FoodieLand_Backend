@@ -4,8 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# SQLite
-db.sqlite3
+firebase_service_account_key.json
 
 # Environment
 .env
@@ -26,9 +25,6 @@ __pycache__/
 *.pyo
 *.pyd
 
-# SQLite
-db.sqlite3
-
 # Environment
 .env
 venv/
@@ -40,3 +36,16 @@ media/
 # System
 .DS_Store
 Thumbs.db
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.env
+*.env
+venv/
+.venv/
+
+# Firebase secret
+firebase_service_account.json
